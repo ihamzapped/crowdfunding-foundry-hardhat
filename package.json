@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test:cf": "forge test --match-path test/crowd-funding/**/*.t.sol"
+    "watch": "forge test --watch",
+    "test:cf": "forge test -vv --match-path test/crowd-funding/**/*.t.sol"
   },
   "keywords": [],
   "author": "",
