@@ -29,6 +29,15 @@ contract CrowdFunding {
         contributors[msg.sender] += msg.value;
     }
 
+    function refund() public {
+        require(contributors[msg.sender] > 0, "!contributor");
+        require(block.timestamp > deadline && raised < goal, "!req");
+
+        uint _amount = contributors[msg.sender];
+        contributors[msg.sender] = 0;
+        payable(msg.sender).transfer(_amount);
+    }
+
     receive() external payable {
         contribute();
     }
