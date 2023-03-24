@@ -2,7 +2,7 @@
 pragma solidity >=0.8;
 
 // import {console} from "forge-std/console.sol";
-import {Test, console, StdAssertions} from "forge-std/Test.sol";
+import {Test, console, StdAssertions, StdCheats} from "forge-std/Test.sol";
 import {BaseSetup} from "./BaseSetup.t.sol";
 import {CrowdFunding} from "../../contracts/CrowdFunding.sol";
 
@@ -25,7 +25,7 @@ contract Test_Contribute is Test, BaseSetup {
     }
 
     function test_new_contributor() public {
-        vm.prank(dev);
+        hoax(dev);
         crowdFunding.contribute{value: 100}();
 
         assertEq(crowdFunding.noOfContributors(), 1);
@@ -34,9 +34,8 @@ contract Test_Contribute is Test, BaseSetup {
     }
 
     function test_old_contributor() public {
-        vm.prank(dev);
+        startHoax(dev);
         crowdFunding.contribute{value: 100}();
-        vm.prank(dev);
         crowdFunding.contribute{value: 100}();
 
         assertEq(crowdFunding.noOfContributors(), 1);
@@ -45,11 +44,11 @@ contract Test_Contribute is Test, BaseSetup {
     }
 
     function test_multi_contributors() public {
-        vm.prank(dev);
+        hoax(dev);
         crowdFunding.contribute{value: 100}();
-        vm.prank(users[2]);
+        hoax(users[2]);
         crowdFunding.contribute{value: 100}();
-        vm.prank(users[3]);
+        hoax(users[3]);
         crowdFunding.contribute{value: 100}();
 
         assertEq(crowdFunding.noOfContributors(), 3);

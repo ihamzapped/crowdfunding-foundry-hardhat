@@ -19,9 +19,7 @@ contract BaseSetup is Test {
         utils = new Utils();
         users = utils.createUsers(4);
         owner = users[0];
-        vm.label(owner, "Owner");
         dev = users[1];
-        vm.label(dev, "Developer");
 
         vm.prank(owner);
         crowdFunding = new CrowdFunding(1000, block.timestamp, 100);

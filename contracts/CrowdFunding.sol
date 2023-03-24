@@ -23,7 +23,7 @@ contract CrowdFunding {
         require(deadline >= block.timestamp, "!time");
         require(msg.value >= minContribution, "!amount");
 
-        if (contributors[msg.sender] != 0) noOfContributors++;
+        if (contributors[msg.sender] == 0) noOfContributors++;
 
         raised += msg.value;
         contributors[msg.sender] += msg.value;
