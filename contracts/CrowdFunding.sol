@@ -50,13 +50,25 @@ contract CrowdFunding is ICrowdFunding {
         uint _amount,
         address payable _recipient,
         string memory _description
-    ) public Owner {
+    ) external Owner {
         Request storage req = requests[countRequests];
         countRequests++;
 
         req.amount = _amount;
         req.recipient = _recipient;
         req.description = _description;
+    }
+
+    function voteSpendingReq(uint _reqIndex) external {
+        require(_reqIndex < countRequests, "!index");
+        require(contributors[msg.sender] > 0, "!contributor");
+
+        Request storage req = requests[_reqIndex];
+
+        require(!req.voters[msg.sender], "hasVoted");
+
+        req.voters[msg.sender] = true;
+        req.noOfVoters++;
     }
 
     function getBalance() public view returns (uint) {
