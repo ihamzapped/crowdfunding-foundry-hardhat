@@ -1,22 +1,30 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.1;
 
-contract CrowdFunding {
+import {ICrowdFunding} from "../interfaces/ICrowdFunding.sol";
+
+contract CrowdFunding is ICrowdFunding {
     address public owner;
 
-    uint256 public goal;
-    uint256 public raised;
-    uint256 public deadline;
-    uint256 public minContribution;
-    uint256 public noOfContributors;
+    uint public goal;
+    uint public raised;
+    uint public deadline;
+    uint public countRequests;
+    uint public minContribution;
+    uint public noOfContributors;
 
-    mapping(address => uint256) public contributors;
+    mapping(uint => Request) public requests;
+    mapping(address => uint) public contributors;
 
     constructor(uint256 _goal, uint256 _deadline, uint256 _minContribution) {
         goal = _goal;
         owner = msg.sender;
         deadline = _deadline;
         minContribution = _minContribution;
+    }
+
+    receive() external payable {
+        contribute();
     }
 
     function contribute() public payable {
@@ -38,11 +46,25 @@ contract CrowdFunding {
         payable(msg.sender).transfer(_amount);
     }
 
-    receive() external payable {
-        contribute();
+    function createSpendingReq(
+        uint _amount,
+        address payable _recipient,
+        string memory _description
+    ) public Owner {
+        Request storage req = requests[countRequests];
+        countRequests++;
+
+        req.amount = _amount;
+        req.recipient = _recipient;
+        req.description = _description;
     }
 
     function getBalance() public view returns (uint) {
         return address(this).balance;
+    }
+
+    modifier Owner() {
+        require(msg.sender == owner, "!owner");
+        _;
     }
 }

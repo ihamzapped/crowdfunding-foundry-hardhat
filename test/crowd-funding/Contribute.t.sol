@@ -26,8 +26,8 @@ contract Test_Contribute is Test, BaseSetup {
         hoax(dev);
         crowdFunding.contribute{value: 100}();
 
-        assertEq(crowdFunding.noOfContributors(), 1);
         assertEq(crowdFunding.raised(), 100);
+        assertEq(crowdFunding.noOfContributors(), 1);
         assertEq(crowdFunding.contributors(dev), 100);
     }
 
@@ -36,8 +36,8 @@ contract Test_Contribute is Test, BaseSetup {
         crowdFunding.contribute{value: 100}();
         crowdFunding.contribute{value: 100}();
 
-        assertEq(crowdFunding.noOfContributors(), 1);
         assertEq(crowdFunding.raised(), 200);
+        assertEq(crowdFunding.noOfContributors(), 1);
         assertEq(crowdFunding.contributors(dev), 200);
     }
 
@@ -49,8 +49,8 @@ contract Test_Contribute is Test, BaseSetup {
         hoax(users[3]);
         crowdFunding.contribute{value: 100}();
 
-        assertEq(crowdFunding.noOfContributors(), 3);
         assertEq(crowdFunding.raised(), 300);
+        assertEq(crowdFunding.noOfContributors(), 3);
         assertEq(crowdFunding.contributors(dev), 100);
         assertEq(crowdFunding.contributors(users[2]), 100);
         assertEq(crowdFunding.contributors(users[3]), 100);
