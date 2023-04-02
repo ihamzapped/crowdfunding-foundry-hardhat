@@ -15,7 +15,7 @@ contract BaseSetup is Test {
 
     function setUp() public virtual {
         utils = new Utils();
-        users = utils.createUsers(4);
+        users = utils.createUsers(10);
         owner = users[0];
         dev = users[1];
 

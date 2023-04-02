@@ -71,6 +71,18 @@ contract CrowdFunding is ICrowdFunding {
         req.noOfVoters++;
     }
 
+    function spendReq(uint _reqIndex) external Owner {
+        require(raised >= goal, "!goal");
+
+        Request storage req = requests[_reqIndex];
+
+        require(!req.completed, "paid");
+        require(req.noOfVoters > (noOfContributors / 2), "!votes");
+
+        req.completed = true;
+        req.recipient.transfer(req.amount);
+    }
+
     function getBalance() public view returns (uint) {
         return address(this).balance;
     }

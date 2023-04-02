@@ -5,34 +5,30 @@ import {BaseSetup} from "./BaseSetup.t.sol";
 import {Test, console, StdAssertions, StdCheats} from "forge-std/Test.sol";
 
 contract SpendingReq is Test, BaseSetup {
+    uint amount = 10 ether;
+    string description = "hehe i'm description";
+    address payable recipient = payable(dev);
+
     function test_owner() public {
         startHoax(dev);
         vm.expectRevert();
-        crowdFunding.createSpendingReq(
-            1 ether,
-            payable(owner),
-            "I'm going to revert"
-        );
+        crowdFunding.createSpendingReq(amount, payable(owner), description);
     }
 
     function test_createReq() public {
-        uint _amount = 10 ether;
-        string memory _description = "I'm going to revert";
-        address payable _recipient = payable(dev);
-
         hoax(owner);
-        crowdFunding.createSpendingReq(_amount, _recipient, _description);
+        crowdFunding.createSpendingReq(amount, recipient, description);
 
         (
-            uint amount,
-            bool completed,
-            uint noOfVoters,
-            string memory description,
-            address payable recipient
+            uint _amount,
+            bool _completed,
+            uint _noOfVoters,
+            string memory _description,
+            address payable _recipient
         ) = crowdFunding.requests(0);
 
-        assertFalse(completed);
-        assertEq(noOfVoters, 0);
+        assertFalse(_completed);
+        assertEq(_noOfVoters, 0);
         assertEq(amount, _amount);
         assertEq(recipient, _recipient);
         assertEq(description, _description);
