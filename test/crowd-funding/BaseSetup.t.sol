@@ -2,7 +2,7 @@
 pragma solidity >=0.8;
 
 import {Utils} from "../Utils.sol";
-import {CrowdFunding} from "../../contracts/CrowdFunding.sol";
+import {CrowdFunding} from "../../contracts/crowd-funding/CrowdFunding.sol";
 import {stdStorage, StdStorage, Test, console, StdAssertions} from "forge-std/Test.sol";
 
 contract BaseSetup is Test {

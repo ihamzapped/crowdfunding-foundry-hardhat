@@ -1,21 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.1;
 
-import {ICrowdFunding} from "../interfaces/ICrowdFunding.sol";
+import {ICrowdFunding} from "./Interface.sol";
+import {CrowdFundingEvents} from "./Events.sol";
+import {CrowdFundingStorage} from "./Storage.sol";
 
-contract CrowdFunding is ICrowdFunding {
-    address public owner;
-
-    uint public goal;
-    uint public raised;
-    uint public deadline;
-    uint public countRequests;
-    uint public minContribution;
-    uint public noOfContributors;
-
-    mapping(uint => Request) public requests;
-    mapping(address => uint) public contributors;
-
+contract CrowdFunding is CrowdFundingStorage, CrowdFundingEvents {
     constructor(uint256 _goal, uint256 _deadline, uint256 _minContribution) {
         goal = _goal;
         owner = msg.sender;
@@ -35,6 +25,8 @@ contract CrowdFunding is ICrowdFunding {
 
         raised += msg.value;
         contributors[msg.sender] += msg.value;
+
+        emit Contribute(msg.sender, msg.value, raised, noOfContributors);
     }
 
     function refund() public {
@@ -57,6 +49,13 @@ contract CrowdFunding is ICrowdFunding {
         req.amount = _amount;
         req.recipient = _recipient;
         req.description = _description;
+
+        emit NewRequest(
+            (countRequests - 1),
+            req.amount,
+            req.recipient,
+            req.description
+        );
     }
 
     function voteSpendingReq(uint _reqIndex) external {
@@ -69,6 +68,15 @@ contract CrowdFunding is ICrowdFunding {
 
         req.voters[msg.sender] = true;
         req.noOfVoters++;
+
+        emit Voted(
+            _reqIndex,
+            msg.sender,
+            req.amount,
+            req.recipient,
+            req.description,
+            req.noOfVoters
+        );
     }
 
     function spendReq(uint _reqIndex) external Owner {
@@ -81,6 +89,14 @@ contract CrowdFunding is ICrowdFunding {
 
         req.completed = true;
         req.recipient.transfer(req.amount);
+
+        emit SpentRequest(
+            _reqIndex,
+            req.completed,
+            req.amount,
+            req.recipient,
+            req.description
+        );
     }
 
     function getBalance() public view returns (uint) {
