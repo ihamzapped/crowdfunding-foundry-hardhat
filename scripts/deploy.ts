@@ -1,19 +1,37 @@
-import { ethers } from "hardhat";
+import hre, { ethers } from "hardhat";
+import { fromEpoch } from "./helpers";
+
+const { parseUnits } = ethers.utils;
+
+const min = 100;
+const goal = 1_200_000;
+const time = Math.round(Date.now() / 1000) * 2;
+
+const goalBig = parseUnits(String(goal));
+
+const params = [goalBig, time, min] as const;
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
+  try {
+    const CrowdFunding = await ethers.getContractFactory("CrowdFunding");
+    const cf = await CrowdFunding.deploy(...params);
 
-  const lockedAmount = ethers.utils.parseEther("0.001");
+    await cf.deployTransaction.wait(6);
 
-  const Lock = await ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
+    console.log(
+      `Deployed CrowdFunding Contract
+      Goal: ${goal}
+      Deadline: ${fromEpoch(time)}
+      Address: ${cf.address}\n`
+    );
 
-  await lock.deployed();
-
-  console.log(
-    `Lock with ${ethers.utils.formatEther(lockedAmount)}ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
-  );
+    await hre.run("verify:verify", {
+      address: cf.address,
+      constructorArguments: params,
+    });
+  } catch (error) {
+    throw error;
+  }
 }
 
 // We recommend this pattern to be able to use async/await everywhere
