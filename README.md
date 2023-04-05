@@ -1,13 +1,36 @@
-# Sample Hardhat Project
+# Crowd Funding
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+A crowd funding solidity project I did as part of [this](https://www.udemy.com/course/master-ethereum-and-solidity-programming-with-real-world-apps/) course. The course covers base contract while I set up this foundry-hardhat project to unit test and deploy the contract
 
-Try running some of the following tasks:
+## Setup
+
+**Recommended**
+
+1. Create .env from example file
+2. Install [pnpm](https://pnpm.io/installation)
+   and [foundry](https://book.getfoundry.sh/getting-started/installation).
+3. Run the following command in project root:
 
 ```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
+ pnpm deps
 ```
+
+## Deploy
+
+```shell
+ pnpm deploy:<mumbai | fuji>
+```
+
+## Test Crowd Funding Contract
+
+```shell
+ pnpm test:cf
+```
+
+## Compile
+
+```shell
+ npx hardhat compile | forge compile
+```
+
+P.S: This code is un-audited and not to be used in production
