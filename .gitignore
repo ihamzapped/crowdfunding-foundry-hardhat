@@ -7,9 +7,6 @@ typechain-types
 cache_forge
 out
 
-# libraries
-lib
-
 
 # Hardhat files
 cache
