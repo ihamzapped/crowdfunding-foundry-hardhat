@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.1;
 
-import {ICrowdFunding} from "./Interface.sol";
-
-contract CrowdFundingStorage is ICrowdFunding {
+contract CrowdFundingStorage {
     address public owner;
 
     uint public goal;
@@ -15,4 +13,13 @@ contract CrowdFundingStorage is ICrowdFunding {
 
     mapping(uint => Request) public requests;
     mapping(address => uint) public contributors;
+
+    struct Request {
+        uint amount;
+        bool completed;
+        uint noOfVoters;
+        string description;
+        address payable recipient;
+        mapping(address => bool) voters;
+    }
 }

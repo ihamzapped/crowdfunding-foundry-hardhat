@@ -2,10 +2,9 @@
 pragma solidity ^0.8.1;
 
 import {ICrowdFunding} from "./Interface.sol";
-import {CrowdFundingEvents} from "./Events.sol";
 import {CrowdFundingStorage} from "./Storage.sol";
 
-contract CrowdFunding is CrowdFundingStorage, CrowdFundingEvents {
+contract CrowdFunding is CrowdFundingStorage, ICrowdFunding {
     constructor(uint256 _goal, uint256 _deadline, uint256 _minContribution) {
         goal = _goal;
         owner = msg.sender;
@@ -29,7 +28,7 @@ contract CrowdFunding is CrowdFundingStorage, CrowdFundingEvents {
         emit Contribute(msg.sender, msg.value, raised, noOfContributors);
     }
 
-    function refund() public {
+    function refund() external {
         require(contributors[msg.sender] > 0, "!contributor");
         require(block.timestamp > deadline && raised < goal, "!req");
 
