@@ -5,12 +5,11 @@ import {ICrowdFunding} from "./Interface.sol";
 import {CrowdFundingStorage} from "./Storage.sol";
 
 contract CrowdFunding is CrowdFundingStorage, ICrowdFunding {
-    constructor(uint256 _goal, uint256 _deadline, uint256 _minContribution) {
-        goal = _goal;
-        owner = msg.sender;
-        deadline = _deadline;
-        minContribution = _minContribution;
-    }
+    constructor(
+        uint256 _goal,
+        uint256 _deadline,
+        uint256 _minContribution
+    ) CrowdFundingStorage(_goal, _deadline, _minContribution) {}
 
     receive() external payable {
         contribute();

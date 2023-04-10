@@ -11,13 +11,13 @@ contract SpendReq is Test, BaseSetup {
 
     function localSetup() private {
         hoax(dev);
-        crowdFunding.contribute{value: 10 ether}();
+        crowdFunding.contribute{value: 100}();
         hoax(users[2]);
-        crowdFunding.contribute{value: 10 ether}();
+        crowdFunding.contribute{value: 100}();
         hoax(users[3]);
-        crowdFunding.contribute{value: 10 ether}();
+        crowdFunding.contribute{value: 100}();
         hoax(users[4]);
-        crowdFunding.contribute{value: 10 ether}();
+        crowdFunding.contribute{value: 100}();
 
         hoax(owner);
         crowdFunding.createSpendingReq(amount, recipient, description);
@@ -32,6 +32,10 @@ contract SpendReq is Test, BaseSetup {
 
     function test_spendReq() public {
         localSetup();
+
+        // fulfill goal
+        hoax(dev);
+        crowdFunding.contribute{value: 10 ether}();
 
         (uint _amount, , , , address payable _recipient) = crowdFunding
             .requests(0);
@@ -55,12 +59,13 @@ contract SpendReq is Test, BaseSetup {
     function test_notGoal() public {
         localSetup();
 
-        // Set goal to 1,000 ether
-        vm.store(
-            address(crowdFunding),
-            bytes32(uint(1)),
-            bytes32(uint(1000 ether))
-        );
+        // cannot mutate anymore because marked goal as immutable
+        // // Set goal to 1,000 ether
+        // // vm.store(
+        // //     address(crowdFunding),
+        // //     bytes32(uint(1)),
+        // //     bytes32(uint(1000 ether))
+        // // );
 
         startHoax(owner);
         vm.expectRevert();
@@ -85,6 +90,10 @@ contract SpendReq is Test, BaseSetup {
     function test_doubleSpend() public {
         localSetup();
 
+        // fulfill goal
+        hoax(dev);
+        crowdFunding.contribute{value: 10 ether}();
+
         startHoax(owner);
         crowdFunding.spendReq(0);
 
@@ -94,6 +103,10 @@ contract SpendReq is Test, BaseSetup {
 
     function test_revertOwner() public {
         localSetup();
+
+        // fulfill goal
+        hoax(dev);
+        crowdFunding.contribute{value: 10 ether}();
 
         startHoax(dev);
         vm.expectRevert();
