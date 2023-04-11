@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.1;
 
-import {ICrowdFunding} from "./Interface.sol";
+import {ICrowdFunding, Request} from "./Interface.sol";
 import {CrowdFundingStorage} from "./Storage.sol";
 
 contract CrowdFunding is CrowdFundingStorage, ICrowdFunding {

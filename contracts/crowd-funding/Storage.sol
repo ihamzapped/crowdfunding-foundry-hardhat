@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.1;
 
+import {Request} from "./Interface.sol";
+
 contract CrowdFundingStorage {
     uint public immutable goal;
     uint public immutable deadline;
@@ -19,14 +21,5 @@ contract CrowdFundingStorage {
         owner = msg.sender;
         deadline = _deadline;
         minContribution = _minContribution;
-    }
-
-    struct Request {
-        uint amount;
-        bool completed;
-        uint noOfVoters;
-        string description;
-        address payable recipient;
-        mapping(address => bool) voters;
     }
 }
